@@ -7,7 +7,7 @@ class menus {
   val menuLogos = new menuLogos()
   val sha256 = new sha256()
   val sparkData = new sparkData()
-
+  val query = new query()
 
 
   //Main Menu print and scan input
@@ -50,8 +50,7 @@ class menus {
     var pass = readLine()
     var status = sparkData.userExists(user,sha256.hash(pass))
     if (status == true){
-      println("YAY CORRECT!")
-      System.exit(0) //implement login passed
+      query.privilegeCheck(user)
     }else{
       while(status == false){
         println("clearscreen")
@@ -64,8 +63,7 @@ class menus {
         status = sparkData.userExists(user,sha256.hash(pass))
         if(status == true){
           status = true
-          println("clearscreen")
-          println("Login Successful") // add page to move there
+          query.privilegeCheck(user)
           System.exit(0)
         }
         count -= 1

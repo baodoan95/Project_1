@@ -38,4 +38,8 @@ class sparkData{
     if(check(0)(0) == 1) true else false
   }
 
+  def checkPrivilege(user:String):Int={
+    val check = spark.sql(s"SELECT privilege FROM users WHERE username = '$user'").collect()
+    if(check(0)(0) == "Administrator") 1 else 0
+  }
 }
