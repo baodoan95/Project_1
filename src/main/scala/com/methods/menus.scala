@@ -1,4 +1,5 @@
 package com.methods
+import java.util.Calendar
 import scala.io.StdIn._
 class menus {
 
@@ -68,12 +69,13 @@ class menus {
         if(count == 0){
           status = true
           println("clearscreen")
-          println("Maximum failed attempts reached.")
+          println(s"${Console.GREEN}Maximum failed attempts reached.")
           println("Redirecting to main menu")
-          for(i <- 0 to 18){
+          for(i <- 0 to 20){
             print("█")
-            Thread.sleep(100)
+            Thread.sleep(120)
           }
+          print(s"${Console.RESET}")
           mainMenu()
         }
       }
@@ -86,8 +88,17 @@ class menus {
   def createAccount():Unit= {
     println("clearscreen")
     menuLogos.accCreateMenu()
-    print(s"${Console.RED}Enter Username: ${Console.RESET}")
-    val user = readLine()
+    var userExistsCheck = true
+    var user = ""
+    while (userExistsCheck) {
+      print(s"${Console.RED}Enter Username: ${Console.RESET}")
+      user = readLine()
+      if(sparkData.userExistsDup(user) == false) userExistsCheck = false
+      else{
+        println("Username already exist. Please pick different username!")
+      }
+    }
+
     var isMatch = true
     print(s"${Console.RED}Enter Password: ${Console.RESET}")
     val pass = readLine()
@@ -102,12 +113,13 @@ class menus {
     }
     sparkData.createUser(user,sha256.hash(pass))
     println("clearscreen")
-    println("Account created successfully!")
+    println(s"${Console.GREEN}Account created successfully!")
     println("Redirecting to main menu")
-    for(i <- 0 to 18){
+    for(i <- 0 to 20){
       print("█")
-      Thread.sleep(100)
+      Thread.sleep(120)
     }
+    print(s"${Console.RESET}")
     mainMenu()
   }
 
@@ -120,46 +132,90 @@ class menus {
   def admin(user:String): Unit ={
     println("clearscreen")
     menuLogos.querySection()
-    println(s"\nHello $user!\n")
-    println(s" ${Console.RED}[1]${Console.RESET} View accounts")
-    println(s" ${Console.RED}[2]${Console.RESET} Delete account")
-    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
+    println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
+    println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
+    println(s" ${Console.RED}[1]${Console.RESET} Start query")
+    println(s" ${Console.RED}[2]${Console.RESET} View accounts")
+    println(s" ${Console.RED}[3]${Console.RESET} Update Privilege")
+    println(s" ${Console.RED}[4]${Console.RESET} Delete account")
+    println(s" ${Console.RED}[5]${Console.RESET} Log Out\n")
     print("Enter input: ")
     var input = readLine()
     var isTrue = true
     while(isTrue) {
       input match {
-        case "1" => sparkData.showUsers()
-          println("Press Enter to go back to menu")
+        case "1" => println("Will add query here")
+        System.exit(0)
+        case "2" => println("clearscreen")
+          sparkData.showUsers()
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
           val wait = readLine()
           admin(user)
-        case "2" => println("clearscreen")
+        case "3" => println("clearscreen")
+          print("Enter update privilege username: ")
+          val userp = readLine()
+          print("Enter privilege type: ")
+          val privilp = readLine()
+          sparkData.updatePrivilege(userp,privilp)
+          println(s"${Console.GREEN}Updated user '$userp' privilege to $privilp successfully!")
+          println("Redirect back menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          admin(user)
+        case "4" => println("clearscreen")
           print("Enter username to be deleted: ")
           val delete = readLine()
           sparkData.deleteUser(delete)
-          println(s"Deleted user '$delete' successfully!")
+          println(s"${Console.GREEN}Deleted user '$delete' successfully!")
           println("Redirect back menu")
-          for(i <- 0 to 18){
+          for(i <- 0 to 20){
             print("█")
-            Thread.sleep(100)
+            Thread.sleep(120)
           }
+          print(s"${Console.RESET}")
           admin(user)
-        case "3" => println("clearscreen")
+        case "5" => println("clearscreen")
+          println(s"${Console.GREEN}Logged out of user $user successfully!")
           println("Redirecting to main menu")
-          for(i <- 0 to 18){
+          for(i <- 0 to 20){
             print("█")
-            Thread.sleep(100)
+            Thread.sleep(120)
           }
+          print(s"${Console.RESET}")
           mainMenu()
       }
     }
   }
 
   //basic user functions
-  def basic(user:String): Unit ={
+  def basic(user:String): Unit = {
     println("clearscreen")
-    println(s"Hello $user!")
-    System.exit(0)
+    menuLogos.querySection()
+    println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
+    println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
+    println(s" ${Console.RED}[1]${Console.RESET} Start Query")
+    println(s" ${Console.RED}[2]${Console.RESET} Log Out\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while (isTrue) {
+      input match {
+        case "1" => println("Will add query here")
+        System.exit(0)
+        case "2" => println("clearscreen")
+          println(s"${Console.GREEN}Logged out of user $user successfully!")
+          println("Redirecting to main menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          mainMenu()
+      }
+    }
   }
 
 }
