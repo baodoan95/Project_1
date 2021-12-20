@@ -11,15 +11,10 @@ class sparkData{
     .getOrCreate()
   spark.sql("USE project1")
 
-  //Delete this block later only for testing
-  def showTable(): Unit ={
+
+  def showUsers(): Unit ={
     spark.sql("SELECT * FROM users").show()
   }
-  //Delete this block later only for testing
-
-
-
-
 
   def deleteUser(user:String): Unit ={
     spark.sql("CREATE TABLE holdertable (username String, password String, privilege string, dbquery_count int)")

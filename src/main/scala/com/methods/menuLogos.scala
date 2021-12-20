@@ -21,4 +21,9 @@ class menuLogos {
     println(s"     | CREATE ACCOUNT |\n${Console.RESET}")
   }
 
+  def querySection():Unit={
+    println(s"     ${Console.RED}___________________")
+    println(s"     | QUERY SECTION |\n${Console.RESET}")
+  }
+
 }

@@ -7,7 +7,7 @@ class menus {
   val menuLogos = new menuLogos()
   val sha256 = new sha256()
   val sparkData = new sparkData()
-  val query = new query()
+
 
 
   //Main Menu print and scan input
@@ -38,8 +38,6 @@ class menus {
     }
   }
 
-
-
   //Login Menu
   def login():Unit={
     menuLogos.loginMenu()
@@ -50,7 +48,7 @@ class menus {
     var pass = readLine()
     var status = sparkData.userExists(user,sha256.hash(pass))
     if (status == true){
-      query.privilegeCheck(user)
+      privilegeCheck(user)
     }else{
       while(status == false){
         println("clearscreen")
@@ -63,7 +61,7 @@ class menus {
         status = sparkData.userExists(user,sha256.hash(pass))
         if(status == true){
           status = true
-          query.privilegeCheck(user)
+          privilegeCheck(user)
           System.exit(0)
         }
         count -= 1
@@ -83,7 +81,6 @@ class menus {
       mainMenu()
     }
   }
-
 
   //Create Account Menu
   def createAccount():Unit= {
@@ -105,7 +102,7 @@ class menus {
     }
     sparkData.createUser(user,sha256.hash(pass))
     println("clearscreen")
-    println("Account successfully created!")
+    println("Account created successfully!")
     println("Redirecting to main menu")
     for(i <- 0 to 18){
       print("█")
@@ -114,6 +111,55 @@ class menus {
     mainMenu()
   }
 
+  //Privilege check to assign proper options
+  def privilegeCheck(user:String): Unit ={
+    if(sparkData.checkPrivilege(user) == 1) admin(user) else basic(user)
+  }
 
+  //admin functions
+  def admin(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection()
+    println(s"\nHello $user!\n")
+    println(s" ${Console.RED}[1]${Console.RESET} View accounts")
+    println(s" ${Console.RED}[2]${Console.RESET} Delete account")
+    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while(isTrue) {
+      input match {
+        case "1" => sparkData.showUsers()
+          println("Press Enter to go back to menu")
+          val wait = readLine()
+          admin(user)
+        case "2" => println("clearscreen")
+          print("Enter username to be deleted: ")
+          val delete = readLine()
+          sparkData.deleteUser(delete)
+          println(s"Deleted user '$delete' successfully!")
+          println("Redirect back menu")
+          for(i <- 0 to 18){
+            print("█")
+            Thread.sleep(100)
+          }
+          admin(user)
+        case "3" => println("clearscreen")
+          println("Redirecting to main menu")
+          for(i <- 0 to 18){
+            print("█")
+            Thread.sleep(100)
+          }
+          mainMenu()
+      }
+    }
+  }
+
+  //basic user functions
+  def basic(user:String): Unit ={
+    println("clearscreen")
+    println(s"Hello $user!")
+    System.exit(0)
+  }
 
 }
