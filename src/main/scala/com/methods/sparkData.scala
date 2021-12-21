@@ -38,12 +38,15 @@ class sparkData{
   }
 
   def showMoviesTable(): Unit ={
-    spark.sql("SELECT COUNT(*) FROM movies").show()
+    spark.sql("SELECT * FROM movies").show(1100)
   }
   //-----------MAIN MOVIES DATA FUNCTIONS--------------
 
 
+//test
 
+
+//test
 
 
 
