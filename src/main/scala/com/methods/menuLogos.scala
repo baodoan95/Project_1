@@ -2,12 +2,12 @@ package com.methods
 
 class menuLogos {
   def welcomeMenu():Unit={
-    println(s"${Console.RED}    ____  ____  ____      ____________________  " +
-      s" ___\n   / __ \\/ __ \\/ __ \\  " +
-      s"  / / ____/ ____/_  __/  <  /\n  / /_/ / /_/ / / / /_  / / __/ / /     / /   " +
-      s"  / / \n / ____/ _, _/ /_/ / /_/ / /___/ /___  / /   " +
-      s"  / /  \n/_/   /_/ |_|\\____/\\____/_____/\\____/ /_/     /_/   \n${Console.RESET}")
-    println(s"${Console.GREEN}                 MOVIE ANALYTIC APP${Console.RESET}\n")
+    println(s"${Console.RED}         ____  ____  ____      ____________________  " +
+      s" ___\n        / __ \\/ __ \\/ __ \\  " +
+      s"  / / ____/ ____/_  __/  <  /\n       / /_/ / /_/ / / / /_  / / __/ / /     / /   " +
+      s"  / / \n      / ____/ _, _/ /_/ / /_/ / /___/ /___  / /   " +
+      s"  / /  \n     /_/   /_/ |_|\\____/\\____/_____/\\____/ /_/     /_/   \n${Console.RESET}")
+    println(s"${Console.GREEN}                     MOVIE ANALYTIC APP${Console.RESET}\n")
   }
 
   def mainMenu():Unit={

@@ -197,7 +197,8 @@ class menus {
     println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start Query")
-    println(s" ${Console.RED}[2]${Console.RESET} Log Out\n")
+    println(s" ${Console.RED}[2]${Console.RESET} Change Username")
+    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
     print("Enter input: ")
     var input = readLine()
     var isTrue = true
@@ -205,7 +206,8 @@ class menus {
       input match {
         case "1" => println("Will add query here")
         System.exit(0)
-        case "2" => println("clearscreen")
+        case "2" => changeUser()
+        case "3" => println("clearscreen")
           println(s"${Console.GREEN}Logged out of user $user successfully!")
           println("Redirecting to main menu")
           for(i <- 0 to 20){
@@ -218,4 +220,21 @@ class menus {
     }
   }
 
+  def changeUser(): Unit ={
+    println("clearscreen")
+    print("Enter current username: ")
+    val olduser = readLine()
+    print("Enter new username: ")
+    val newuser = readLine()
+    sparkData.updateUsername(olduser,newuser)
+    println("clearscreen")
+    println(s"${Console.GREEN}Username changed from '$olduser' to '$newuser' successfully!")
+    println("Redirecting to main menu")
+    for(i <- 0 to 20){
+      print("█")
+      Thread.sleep(120)
+    }
+    print(s"${Console.RESET}")
+    mainMenu()
+  }
 }

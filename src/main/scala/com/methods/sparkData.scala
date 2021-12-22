@@ -1,5 +1,7 @@
 package com.methods
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
 class sparkData{
   //Hadoop pathing and set up
   System.setProperty("hadoop.home.dir", "C:\\hadoop")
@@ -39,6 +41,10 @@ class sparkData{
 
   def showMoviesTable(): Unit ={
     spark.sql("SELECT * FROM movies").show(1100)
+  }
+
+  def describeMovies(): Unit ={
+    spark.sql("SELECT content_rating,COUNT(content_rating) FROM movies GROUP BY content_rating").show(1100)
   }
   //-----------MAIN MOVIES DATA FUNCTIONS--------------
 
@@ -100,4 +106,11 @@ class sparkData{
     spark.sql(s"INSERT INTO users VALUES('$usert','$passt','$privil')")
   }
 
+  def updateUsername(olduser:String,newuser:String): Unit ={
+    val temp = spark.sql(s"SELECT * FROM users WHERE username = '$olduser'").collect()
+    val oldpass = temp(0)(1)
+    val oldprivil = temp(0)(2)
+    deleteUser(olduser)
+    spark.sql(s"INSERT INTO users VALUES('$newuser','$oldpass','$oldprivil')")
+  }
 }
