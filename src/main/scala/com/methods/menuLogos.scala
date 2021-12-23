@@ -26,12 +26,12 @@ class menuLogos {
   }
 
   def querySection():Unit={
-    println(s"             ${Console.RED}__________________")
-    println(s"             | MOVIES ANALYTIC|\n${Console.RESET}")
+    println(s"             ${Console.RED}_______________________")
+    println(s"             | MOVIES ANALYTIC APP |\n${Console.RESET}")
   }
 
   def editAccount():Unit={
-    println(s"             ${Console.RED}_____________________")
-    println(s"             | ACCOUNT MANAGEMENT|\n${Console.RESET}")
+    println(s"             ${Console.RED}______________________")
+    println(s"             | ACCOUNT MANAGEMENT |\n${Console.RESET}")
   }
 }

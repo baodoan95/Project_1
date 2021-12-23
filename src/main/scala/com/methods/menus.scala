@@ -10,7 +10,6 @@ class menus {
   val sparkData = new sparkData()
 
 
-
   //Main Menu print and scan input
   def mainMenu(): Unit ={
     println("clearscreen")
