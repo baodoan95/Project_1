@@ -154,6 +154,8 @@ class menus {
           }
           print(s"${Console.RESET}")
           mainMenu()
+        case _ => print("Invalid options.  Try again:  ")
+        input = readLine()
       }
     }
   }
@@ -184,6 +186,8 @@ class menus {
           }
           print(s"${Console.RESET}")
           mainMenu()
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
       }
     }
   }
@@ -238,11 +242,6 @@ class menus {
           }
           print(s"${Console.RESET}")
           editAccountAdmin(user)
-        case "3" => println("clearscreen")
-          basic(user)
-
-
-
 
 
         case "4" => println("clearscreen")
@@ -273,6 +272,8 @@ class menus {
           editAccountAdmin(user)
         case "6" => println("clearscreen")
           admin(user)
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
       }
     }
   }
@@ -325,6 +326,8 @@ class menus {
           mainMenu()
         case "3" => println("clearscreen")
           basic(user)
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
       }
     }
   }
