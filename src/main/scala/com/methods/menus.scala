@@ -135,10 +135,8 @@ class menus {
     println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start query")
-    println(s" ${Console.RED}[2]${Console.RESET} View accounts")
-    println(s" ${Console.RED}[3]${Console.RESET} Update Privilege")
-    println(s" ${Console.RED}[4]${Console.RESET} Delete account")
-    println(s" ${Console.RED}[5]${Console.RESET} Log Out\n")
+    println(s" ${Console.RED}[2]${Console.RESET} Edit Accounts")
+    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
     print("Enter input: ")
     var input = readLine()
     var isTrue = true
@@ -146,38 +144,8 @@ class menus {
       input match {
         case "1" => println("Will add query here")
         System.exit(0)
-        case "2" => println("clearscreen")
-          sparkData.showUsers()
-          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
-          val wait = readLine()
-          admin(user)
+        case "2" => editAccountAdmin(user)
         case "3" => println("clearscreen")
-          print("Enter update privilege username: ")
-          val userp = readLine()
-          print("Enter privilege type: ")
-          val privilp = readLine()
-          sparkData.updatePrivilege(userp,privilp)
-          println(s"${Console.GREEN}Updated user '$userp' privilege to $privilp successfully!")
-          println("Redirect back menu")
-          for(i <- 0 to 20){
-            print("█")
-            Thread.sleep(120)
-          }
-          print(s"${Console.RESET}")
-          admin(user)
-        case "4" => println("clearscreen")
-          print("Enter username to be deleted: ")
-          val delete = readLine()
-          sparkData.deleteUser(delete)
-          println(s"${Console.GREEN}Deleted user '$delete' successfully!")
-          println("Redirect back menu")
-          for(i <- 0 to 20){
-            print("█")
-            Thread.sleep(120)
-          }
-          print(s"${Console.RESET}")
-          admin(user)
-        case "5" => println("clearscreen")
           println(s"${Console.GREEN}Logged out of user $user successfully!")
           println("Redirecting to main menu")
           for(i <- 0 to 20){
@@ -193,11 +161,11 @@ class menus {
   //basic user functions
   def basic(user:String): Unit = {
     println("clearscreen")
-    menuLogos.querySection()
+    menuLogos.editAccount()
     println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start Query")
-    println(s" ${Console.RED}[2]${Console.RESET} Change Username")
+    println(s" ${Console.RED}[2]${Console.RESET} Edit Account")
     println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
     print("Enter input: ")
     var input = readLine()
@@ -206,7 +174,7 @@ class menus {
       input match {
         case "1" => println("Will add query here")
         System.exit(0)
-        case "2" => changeUser()
+        case "2" => editAccountBasic(user)
         case "3" => println("clearscreen")
           println(s"${Console.GREEN}Logged out of user $user successfully!")
           println("Redirecting to main menu")
@@ -220,10 +188,89 @@ class menus {
     }
   }
 
-  def changeUser(): Unit ={
+  def editAccountAdmin(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection()
+    println(s" ${Console.RED}[1]${Console.RESET} View All Users")
+    println(s" ${Console.RED}[2]${Console.RESET} Change Users' Username")
+    println(s" ${Console.RED}[3]${Console.RESET} Change Users' Password")
+    println(s" ${Console.RED}[4]${Console.RESET} Update User's Privilege")
+    println(s" ${Console.RED}[5]${Console.RESET} Delete User")
+    println(s" ${Console.RED}[6]${Console.RESET} Go Back\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while (isTrue) {
+      input match {
+        case "1" => println("clearscreen")
+          sparkData.showUsers()
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          editAccountAdmin(user)
+        case "2" => changeUser(user)
+        editAccountAdmin(user)
+        case "3" => System.exit(0) //implement password change
+        case "4" => println("clearscreen")
+          print("Enter update privilege username: ")
+          val userp = readLine()
+          print("Enter privilege type: ")
+          val privilp = readLine()
+          sparkData.updatePrivilege(userp,privilp)
+          println(s"${Console.GREEN}Updated user '$userp' privilege to $privilp successfully!")
+          println("Redirect back menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          editAccountAdmin(user)
+        case "5" => println("clearscreen")
+          print("Enter username to be deleted: ")
+          val delete = readLine()
+          sparkData.deleteUser(delete)
+          println(s"${Console.GREEN}Deleted user '$delete' successfully!")
+          println("Redirect back menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          editAccountAdmin(user)
+        case "6" => println("clearscreen")
+          admin(user)
+      }
+    }
+  }
+
+  def editAccountBasic(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection()
+    println(s" ${Console.RED}[1]${Console.RESET} Change Username")
+    println(s" ${Console.RED}[2]${Console.RESET} Change Password")
+    println(s" ${Console.RED}[3]${Console.RESET} Go Back\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while (isTrue) {
+      input match {
+        case "1" => changeUser(user)
+                    mainMenu()
+        case "2" => System.exit(0) //add in password change
+        case "3" => println("clearscreen")
+          basic(user)
+      }
+    }
+  }
+
+  def changeUser(user:String): Unit ={
     println("clearscreen")
     print("Enter current username: ")
-    val olduser = readLine()
+    var olduser = readLine()
+    while(olduser != user){
+      print("Username does not match current username!")
+      print("Enter current username: ")
+      olduser = readLine()
+    }
     print("Enter new username: ")
     val newuser = readLine()
     sparkData.updateUsername(olduser,newuser)
@@ -235,6 +282,5 @@ class menus {
       Thread.sleep(120)
     }
     print(s"${Console.RESET}")
-    mainMenu()
   }
 }

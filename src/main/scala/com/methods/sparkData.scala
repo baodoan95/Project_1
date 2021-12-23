@@ -58,7 +58,6 @@ class sparkData{
 
 
 
-
   //Show users credentials table
   def showUsers(): Unit ={
     spark.sql("SELECT * FROM users").show()

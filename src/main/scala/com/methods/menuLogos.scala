@@ -30,4 +30,8 @@ class menuLogos {
     println(s"             | MOVIES ANALYTIC|\n${Console.RESET}")
   }
 
+  def editAccount():Unit={
+    println(s"             ${Console.RED}_____________________")
+    println(s"             | ACCOUNT MANAGEMENT|\n${Console.RESET}")
+  }
 }
