@@ -112,4 +112,19 @@ class sparkData{
     deleteUser(olduser)
     spark.sql(s"INSERT INTO users VALUES('$newuser','$oldpass','$oldprivil')")
   }
+  def updatePassword(user:String, oldpass:String,newpass:String): Unit ={
+    val temp = spark.sql(s"SELECT * FROM users WHERE username = '$user' AND password = '$oldpass'").collect()
+    val olduser = temp(0)(0)
+    val oldprivil = temp(0)(2)
+    deleteUser(user)
+    spark.sql(s"INSERT INTO users VALUES('$olduser','$newpass','$oldprivil')")
+  }
+
+  def updatePasswordAdminWay(user:String,newpass:String): Unit ={
+    val temp = spark.sql(s"SELECT * FROM users WHERE username = '$user'").collect()
+    val olduser = temp(0)(0)
+    val oldprivil = temp(0)(2)
+    deleteUser(user)
+    spark.sql(s"INSERT INTO users VALUES('$olduser','$newpass','$oldprivil')")
+  }
 }
