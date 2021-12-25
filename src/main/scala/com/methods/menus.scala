@@ -442,7 +442,7 @@ class menus {
       jsoninput match {
         case "y" => print("Name Your Json File Folder: ")
           val jsonfoldername = readLine()
-          sparkData.spark.sql(s"SELECT id, title, genres, description,imDbRating, imDbRatingVotes FROM moviesview ORDER BY $order $ordertype").write.json(s"$jsonfoldername")
+          sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype").write.json(s"$jsonfoldername")
           println("JSON FILE SUCCESSFULLY GENERATED FROM QUERY RESULT.")
           println(s"PLEASE CHECK $jsonfoldername ON THE LEFT TO OBTAIN YOUR FILE.")
           println("Redirecting back to query menu")
