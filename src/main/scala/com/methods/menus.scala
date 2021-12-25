@@ -126,7 +126,7 @@ class menus {
 
   //Privilege check to assign proper options
   def privilegeCheck(user:String): Unit ={
-    if(sparkData.checkPrivilege(user) == 1) admin(user) else basic(user)
+    if(sparkData.checkPrivilege(user) == 1) admin("Admin") else basic("Basic")
   }
 
   //admin functions
@@ -429,21 +429,21 @@ class menus {
     print("How Many Results Do You Want To See: ")
     val resultcount = readLine()
 
-    val json = ujson.read(Http(s"https://imdb-api.com/API/AdvancedSearch/k_mvnql4l2?release_date=$beginyr-01-01,$endyr-01-01&count=$resultcount")
+    val json = ujson.read(Http(s"https://imdb-api.com/API/AdvancedSearch/k_mvnql4l2?release_date=$beginyr-01-01,$endyr-01-01&count=100")
       .asString.body)
     val jsoncontent = json("results").toString()
     import sparkData.spark.implicits._
     val tempTable = sparkData.spark.read.json(Seq(jsoncontent).toDS)
     tempTable.createOrReplaceTempView("moviesview")
-    sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype").show(resultcount.toInt,false)
+    sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype LIMIT $resultcount").show(resultcount.toInt,false)
     println("Do You Want To Save This Query Result Into A Json File? (Y/N): ")
     var jsoninput = readLine().toLowerCase
     while(true) {
       jsoninput match {
         case "y" => print("Name Your Json File Folder: ")
           val jsonfoldername = readLine()
-          sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype").write.json(s"$jsonfoldername")
-          println("JSON FILE SUCCESSFULLY GENERATED FROM QUERY RESULT.")
+          sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype LIMIT $resultcount").repartition(1).write.json(s"$jsonfoldername")
+          println(s"${Console.GREEN}JSON FILE SUCCESSFULLY GENERATED FROM QUERY RESULT.")
           println(s"PLEASE CHECK $jsonfoldername ON THE LEFT TO OBTAIN YOUR FILE.")
           println("Redirecting back to query menu")
           for(i <- 0 to 20){
