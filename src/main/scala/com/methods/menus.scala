@@ -1,4 +1,6 @@
 package com.methods
+import scalaj.http.Http
+
 import java.util.Calendar
 import scala.io.StdIn._
 class menus {
@@ -337,14 +339,14 @@ class menus {
     println(s" ${Console.RED}[1]${Console.RESET} 6 Preset Analytic Queries")
     println(s" ${Console.RED}[2]${Console.RESET} Personalize your own query")
     println(s" ${Console.RED}[3]${Console.RESET} Box Office Weekly Stats")
-    println(s" ${Console.RED}[4]${Console.RESET} Log Out\n")
+    println(s" ${Console.RED}[4]${Console.RESET} Go Back\n")
     print("Enter input: ")
     var input = readLine()
     var isTrue = true
     while(isTrue) {
       input match {
         case "1" => sixqueries(user)
-        case "2" => System.exit(0) //work on later
+        case "2" => personalizeQuery(user)
         case "3" => System.exit(0) //work on later
         case "4" => println("clearscreen")
                     if(user == "Admin") admin(user) else basic(user)
@@ -357,7 +359,7 @@ class menus {
   //6 Preset Queries
   def sixqueries(user:String): Unit ={
     println("clearscreen")
-    menuLogos.querySection() //change later
+    menuLogos.sixQueries()
     println(s" ${Console.RED}[1]${Console.RESET} 1. Genre Average Rating Rankings")
     println(s" ${Console.RED}[2]${Console.RESET} 2. Genre Being Produced The Most In The Last 10 Years")
     println(s" ${Console.RED}[3]${Console.RESET} 3. Most Popularly Bad Movies")
@@ -414,6 +416,47 @@ class menus {
   }
 
   //Personalize Query
+  def personalizeQuery(user:String): Unit ={
+    println("clearscreen")
+    print("Enter Begin Year: ")
+    val beginyr = readLine()
+    print("Enter End Year: ")
+    val endyr = readLine()
+    print("Specify Order (title, genres, year, ratings, or votes): ")
+    val order = readLine()
+    print("ASC OR DESC: ")
+    val ordertype = readLine()
+    print("How Many Results Do You Want To See: ")
+    val resultcount = readLine()
 
+    val json = ujson.read(Http(s"https://imdb-api.com/API/AdvancedSearch/k_mvnql4l2?release_date=$beginyr-01-01,$endyr-01-01&count=$resultcount")
+      .asString.body)
+    val jsoncontent = json("results").toString()
+    import sparkData.spark.implicits._
+    val tempTable = sparkData.spark.read.json(Seq(jsoncontent).toDS)
+    tempTable.createOrReplaceTempView("moviesview")
+    sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype").show(resultcount.toInt,false)
+    println("Do You Want To Save This Query Result Into A Json File? (Y/N): ")
+    var jsoninput = readLine().toLowerCase
+    while(true) {
+      jsoninput match {
+        case "y" => print("Name Your Json File Folder: ")
+          val jsonfoldername = readLine()
+          sparkData.spark.sql(s"SELECT id, title, genres, description,imDbRating, imDbRatingVotes FROM moviesview ORDER BY $order $ordertype").write.json(s"$jsonfoldername")
+          println("JSON FILE SUCCESSFULLY GENERATED FROM QUERY RESULT.")
+          println(s"PLEASE CHECK $jsonfoldername ON THE LEFT TO OBTAIN YOUR FILE.")
+          println("Redirecting back to query menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          startQuery(user)
+        case "n" => startQuery(user)
+        case _ => print("Invalid options.  Try again:  ")
+          jsoninput = readLine()
+      }
+    }
+  }
 
 }

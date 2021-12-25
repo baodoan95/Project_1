@@ -39,4 +39,9 @@ class menuLogos {
     println(s"             ${Console.RED}_________________")
     println(s"             | QUERY SECTION |\n${Console.RESET}")
   }
+
+  def sixQueries():Unit={
+    println(s"             ${Console.RED}______________________________")
+    println(s"             | 6 PRESET QUERIES QUESTIONS |\n${Console.RESET}")
+  }
 }
