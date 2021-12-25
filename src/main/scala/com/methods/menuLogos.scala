@@ -44,4 +44,12 @@ class menuLogos {
     println(s"             ${Console.RED}______________________________")
     println(s"             | 6 PRESET QUERIES QUESTIONS |\n${Console.RESET}")
   }
+  def personalizeQuery():Unit={
+    println(s"             ${Console.RED}________________________")
+    println(s"             | PERSONALIZED QUERIES |\n${Console.RESET}")
+  }
+  def weekendBoxOffice():Unit={
+    println(s"             ${Console.RED}_____________________________")
+    println(s"             | WEEKEND BOX OFFICE STATUS |\n${Console.RESET}")
+  }
 }

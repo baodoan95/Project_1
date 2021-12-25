@@ -133,7 +133,7 @@ class menus {
   def admin(user:String): Unit ={
     println("clearscreen")
     menuLogos.movieAnalyticApp()
-    println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
+    println(s"${Console.GREEN}\nWelcome To Movies Analytic App!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start query")
     println(s" ${Console.RED}[2]${Console.RESET} Edit Accounts")
@@ -164,7 +164,7 @@ class menus {
   def basic(user:String): Unit = {
     println("clearscreen")
     menuLogos.movieAnalyticApp()
-    println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
+    println(s"${Console.GREEN}\nWelcome To Movies Analytic App!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start Query")
     println(s" ${Console.RED}[2]${Console.RESET} Edit Account")
@@ -347,7 +347,7 @@ class menus {
       input match {
         case "1" => sixqueries(user)
         case "2" => personalizeQuery(user)
-        case "3" => System.exit(0) //work on later
+        case "3" => weekendBoxOffice(user)
         case "4" => println("clearscreen")
                     if(user == "Admin") admin(user) else basic(user)
         case _ => print("Invalid options.  Try again:  ")
@@ -360,12 +360,12 @@ class menus {
   def sixqueries(user:String): Unit ={
     println("clearscreen")
     menuLogos.sixQueries()
-    println(s" ${Console.RED}[1]${Console.RESET} 1. Genre Average Rating Rankings")
-    println(s" ${Console.RED}[2]${Console.RESET} 2. Genre Being Produced The Most In The Last 10 Years")
-    println(s" ${Console.RED}[3]${Console.RESET} 3. Most Popularly Bad Movies")
-    println(s" ${Console.RED}[4]${Console.RESET} 4. Ranking Of Movies Rating Types")
-    println(s" ${Console.RED}[5]${Console.RESET} 5. Leonardo DiCaprio Top Movies")
-    println(s" ${Console.RED}[6]${Console.RESET} 6. Most Popular Movies In The Last 10 Years")
+    println(s" ${Console.RED}[1]${Console.RESET} Genre Average Rating Rankings")
+    println(s" ${Console.RED}[2]${Console.RESET} Genre Being Produced The Most In The Last 10 Years")
+    println(s" ${Console.RED}[3]${Console.RESET} Most Popularly Bad Movies")
+    println(s" ${Console.RED}[4]${Console.RESET} Ranking Of Movies Rating Types")
+    println(s" ${Console.RED}[5]${Console.RESET} Leonardo DiCaprio Top Movies")
+    println(s" ${Console.RED}[6]${Console.RESET} Most Popular Movies In The Last 10 Years")
     println(s" ${Console.RED}[7]${Console.RESET} Go Back\n")
     print("Enter input: ")
     var input = readLine()
@@ -418,6 +418,7 @@ class menus {
   //Personalize Query
   def personalizeQuery(user:String): Unit ={
     println("clearscreen")
+    menuLogos.personalizeQuery()
     print("Enter Begin Year: ")
     val beginyr = readLine()
     print("Enter End Year: ")
@@ -436,7 +437,7 @@ class menus {
     val tempTable = sparkData.spark.read.json(Seq(jsoncontent).toDS)
     tempTable.createOrReplaceTempView("moviesview")
     sparkData.spark.sql(s"SELECT id, title, genres, description as year,imDbRating as ratings, imDbRatingVotes as votes FROM moviesview ORDER BY $order $ordertype LIMIT $resultcount").show(resultcount.toInt,false)
-    println("Do You Want To Save This Query Result Into A Json File? (Y/N): ")
+    println(s"${Console.GREEN}Do You Want To Save This Query Result Into A Json File? (Y/N): ")
     var jsoninput = readLine().toLowerCase
     while(true) {
       jsoninput match {
@@ -459,4 +460,36 @@ class menus {
     }
   }
 
+  //Box Office Weekend
+  def weekendBoxOffice(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.weekendBoxOffice()
+    val json = ujson.read(Http("https://imdb-api.com/en/API/BoxOffice/k_mvnql4l2").asString.body)
+    val jsoncontent = json("items").toString()
+    import sparkData.spark.implicits._
+    val tempboxoffice = sparkData.spark.read.json(Seq(jsoncontent).toDS)
+    tempboxoffice.createOrReplaceTempView("WeekendBoxOffice")
+    sparkData.spark.sql("SELECT id, rank, title, weekend, gross, weeks as weeks_in_theater FROM WeekendBoxOffice").show(false)
+    println(s"${Console.GREEN}Do You Want To Save This Query Result Into A Json File? (Y/N): ")
+    var jsoninput = readLine().toLowerCase
+    while(true) {
+      jsoninput match {
+        case "y" => print("Name Your Json File Folder: ")
+          val jsonfoldername = readLine()
+          sparkData.spark.sql("SELECT id, rank, title, weekend, gross, weeks as weeks_in_theater FROM WeekendBoxOffice").repartition(1).write.json(s"$jsonfoldername")
+          println(s"${Console.GREEN}JSON FILE SUCCESSFULLY GENERATED FROM QUERY RESULT.")
+          println(s"PLEASE CHECK $jsonfoldername ON THE LEFT TO OBTAIN YOUR FILE.")
+          println("Redirecting back to query menu")
+          for(i <- 0 to 20){
+            print("█")
+            Thread.sleep(120)
+          }
+          print(s"${Console.RESET}")
+          startQuery(user)
+        case "n" => startQuery(user)
+        case _ => print("Invalid options.  Try again:  ")
+          jsoninput = readLine()
+      }
+    }
+  }
 }
