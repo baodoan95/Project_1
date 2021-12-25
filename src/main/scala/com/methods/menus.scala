@@ -130,7 +130,7 @@ class menus {
   //admin functions
   def admin(user:String): Unit ={
     println("clearscreen")
-    menuLogos.querySection()
+    menuLogos.movieAnalyticApp()
     println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start query")
@@ -141,8 +141,7 @@ class menus {
     var isTrue = true
     while(isTrue) {
       input match {
-        case "1" => println("Will add query here")
-        System.exit(0)
+        case "1" => startQuery(user)
         case "2" => editAccountAdmin(user)
         case "3" => println("clearscreen")
           println(s"${Console.GREEN}Logged out of user $user successfully!")
@@ -162,7 +161,7 @@ class menus {
   //basic user functions
   def basic(user:String): Unit = {
     println("clearscreen")
-    menuLogos.editAccount()
+    menuLogos.movieAnalyticApp()
     println(s"${Console.GREEN}\nWelcome ${user.toUpperCase()}!")
     println(Calendar.getInstance().getTime() + s"${Console.RESET}\n")
     println(s" ${Console.RED}[1]${Console.RESET} Start Query")
@@ -173,8 +172,7 @@ class menus {
     var isTrue = true
     while (isTrue) {
       input match {
-        case "1" => println("Will add query here") //Add query
-        System.exit(0)
+        case "1" => startQuery(user)
         case "2" => editAccountBasic(user)
         case "3" => println("clearscreen")
           println(s"${Console.GREEN}Logged out of user $user successfully!")
@@ -191,6 +189,31 @@ class menus {
     }
   }
 
+  //QUERY FUNCTIONS
+  def startQuery(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection()
+    println(s" ${Console.RED}[1]${Console.RESET} 6 Preset Analytic Queries")
+    println(s" ${Console.RED}[2]${Console.RESET} Top Movies All Time")
+    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while(isTrue) {
+      input match {
+        case "1" => print("Work on this later")
+                  System.exit(0)
+        case "2" => editAccountAdmin(user)
+        case "3" => println("clearscreen")
+                    if(user == "Admin") admin(user) else basic(user)
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
+      }
+    }
+
+  }
+
+  //EDIT ACCOUNTS
   def editAccountAdmin(user:String): Unit ={
     println("clearscreen")
     menuLogos.editAccount()
@@ -330,5 +353,7 @@ class menus {
       }
     }
   }
+
+
 
 }

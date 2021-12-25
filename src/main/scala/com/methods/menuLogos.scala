@@ -25,7 +25,7 @@ class menuLogos {
     println(s"             | CREATE ACCOUNT |\n${Console.RESET}")
   }
 
-  def querySection():Unit={
+  def movieAnalyticApp():Unit={
     println(s"             ${Console.RED}_______________________")
     println(s"             | MOVIES ANALYTIC APP |\n${Console.RESET}")
   }
@@ -33,5 +33,10 @@ class menuLogos {
   def editAccount():Unit={
     println(s"             ${Console.RED}______________________")
     println(s"             | ACCOUNT MANAGEMENT |\n${Console.RESET}")
+  }
+
+  def querySection():Unit={
+    println(s"             ${Console.RED}_________________")
+    println(s"             | QUERY SECTION |\n${Console.RESET}")
   }
 }
