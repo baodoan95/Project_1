@@ -189,30 +189,6 @@ class menus {
     }
   }
 
-  //QUERY FUNCTIONS
-  def startQuery(user:String): Unit ={
-    println("clearscreen")
-    menuLogos.querySection()
-    println(s" ${Console.RED}[1]${Console.RESET} 6 Preset Analytic Queries")
-    println(s" ${Console.RED}[2]${Console.RESET} Top Movies All Time")
-    println(s" ${Console.RED}[3]${Console.RESET} Log Out\n")
-    print("Enter input: ")
-    var input = readLine()
-    var isTrue = true
-    while(isTrue) {
-      input match {
-        case "1" => print("Work on this later")
-                  System.exit(0)
-        case "2" => editAccountAdmin(user)
-        case "3" => println("clearscreen")
-                    if(user == "Admin") admin(user) else basic(user)
-        case _ => print("Invalid options.  Try again:  ")
-          input = readLine()
-      }
-    }
-
-  }
-
   //EDIT ACCOUNTS
   def editAccountAdmin(user:String): Unit ={
     println("clearscreen")
@@ -354,6 +330,90 @@ class menus {
     }
   }
 
+  //QUERY FUNCTIONS
+  def startQuery(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection()
+    println(s" ${Console.RED}[1]${Console.RESET} 6 Preset Analytic Queries")
+    println(s" ${Console.RED}[2]${Console.RESET} Personalize your own query")
+    println(s" ${Console.RED}[3]${Console.RESET} Box Office Weekly Stats")
+    println(s" ${Console.RED}[4]${Console.RESET} Log Out\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while(isTrue) {
+      input match {
+        case "1" => sixqueries(user)
+        case "2" => System.exit(0) //work on later
+        case "3" => System.exit(0) //work on later
+        case "4" => println("clearscreen")
+                    if(user == "Admin") admin(user) else basic(user)
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
+      }
+    }
+  }
+
+  //6 Preset Queries
+  def sixqueries(user:String): Unit ={
+    println("clearscreen")
+    menuLogos.querySection() //change later
+    println(s" ${Console.RED}[1]${Console.RESET} 1. Genre Average Rating Rankings")
+    println(s" ${Console.RED}[2]${Console.RESET} 2. Genre Being Produced The Most In The Last 10 Years")
+    println(s" ${Console.RED}[3]${Console.RESET} 3. Most Popularly Bad Movies")
+    println(s" ${Console.RED}[4]${Console.RESET} 4. Ranking Of Movies Rating Types")
+    println(s" ${Console.RED}[5]${Console.RESET} 5. Leonardo DiCaprio Top Movies")
+    println(s" ${Console.RED}[6]${Console.RESET} 6. Most Popular Movies In The Last 10 Years")
+    println(s" ${Console.RED}[7]${Console.RESET} Go Back\n")
+    print("Enter input: ")
+    var input = readLine()
+    var isTrue = true
+    while(isTrue) {
+      input match {
+        case "1" => println("clearscreen")
+          println("Genre Average Rating Rankings")
+          sparkData.spark.sql("SELECT genre as Genres_Combination, ROUND(AVG(imdb_rating),1) as AVG_Ratings FROM movies GROUP BY genre order by AVG_Ratings DESC").show(false)
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "2" => println("clearscreen")
+          println("Genre Being Produced The Most In The Last 10 Years")
+          sparkData.spark.sql("SELECT genre as Genres_Combination, count(*) AS Total FROM movies GROUP BY genre order by total DESC").show(false)
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "3" => println("clearscreen")
+          println("Most Popularly Bad Movies")
+          sparkData.spark.sql("SELECT title, CAST(rating_votes as INT), imdb_rating FROM movies WHERE imdb_rating < 4.0 ORDER BY rating_votes DESC ").show(false)
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "4" => println("clearscreen")
+          println("Ranking Of Movies Rating Types")
+          sparkData.spark.sql("SELECT content_rating as Rating_Types, count(title) as total FROM movies GROUP BY Rating_Types ORDER BY total DESC").show()
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "5" => println("clearscreen")
+          println("Leonardo DiCaprio Top Movies")
+          sparkData.spark.sql("SELECT title, description, runtime, imdb_rating,rating_votes FROM movies WHERE stars REGEXP 'Leonardo' ORDER BY imdb_rating DESC").show(false)
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "6" => println("clearscreen")
+          println("Most Popular Movies In The Last 10 Years")
+          sparkData.spark.sql("SELECT title, CAST(rating_votes as INT), imdb_rating FROM movies ORDER BY rating_votes DESC").show(false)
+          println(s"Press ${Console.GREEN}Enter${Console.RESET} to go back")
+          val wait = readLine()
+          sixqueries(user)
+        case "7" => startQuery(user)
+        case _ => print("Invalid options.  Try again:  ")
+          input = readLine()
+      }
+    }
+  }
+
+  //Personalize Query
 
 
 }
