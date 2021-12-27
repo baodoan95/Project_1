@@ -21,13 +21,11 @@ class sparkData{
   spark.sql("SET hive.exec.dynamic.partition.mode = nonstrict")
 
 
-
-
 //-----------MAIN MOVIES DATA FUNCTIONS-------------
   def createMoviesTable() {
     spark.sql("CREATE TABLE movies (id STRING, title STRING, description STRING, " +
-      "runtime STRING, content_rating STRING, imdb_rating STRING," +
-      " rating_votes STRING, stars STRING) PARTITIONED BY (genre STRING)")
+      "runtime STRING, genre STRING, imdb_rating STRING," +
+      " rating_votes STRING, stars STRING) PARTITIONED BY (content_rating STRING)")
   }
 
 
