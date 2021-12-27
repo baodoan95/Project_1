@@ -126,7 +126,7 @@ class menus {
 
   //Privilege check to assign proper options
   def privilegeCheck(user:String): Unit ={
-    if(sparkData.checkPrivilege(user) == 1) admin("Admin") else basic("Basic")
+    if(sparkData.checkPrivilege(user) == 1) admin("Admin") else basic(user)
   }
 
   //admin functions
