@@ -8,7 +8,7 @@ class sparkData{
   val spark = SparkSession
     .builder
     .appName("hello hive")
-    .config("spark.master", "local")
+    .config("spark.master", "local[*]")
     .enableHiveSupport()
     .getOrCreate()
   //Turn off all log except errors logs
