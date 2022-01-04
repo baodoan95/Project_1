@@ -1,6 +1,4 @@
-Hello Guys,
-
-This is my Project 1 Movie Data Analytic App, a Scala console application that scrape data from IDMB database utilizing Ujson and HTTP.  Data source is coming from IMDB API.  
+Project 1 Movie Data Analytic App, a Scala console application that scrape data from IDMB database utilizing Ujson and HTTP.  Data source is coming from IMDB API.  
 
 Techonologies used:
 - Hadoop MapReduce
